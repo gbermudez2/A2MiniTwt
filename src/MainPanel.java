@@ -11,6 +11,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainPanel {
 
@@ -21,6 +23,7 @@ public class MainPanel {
     private static JButton button5;
     private static JButton button6;
     private static UserDetails userDetails;
+    private static Map<String, UserDetails> userWindows;
 
     private static class CounterManager {
 
@@ -69,7 +72,7 @@ public class MainPanel {
     static void TreeConstruct(JFrame frame) {
         // Create a root node for the tree, true means it is a user
         root = new UserTreeNode("Root", false);
-        userDetails = new UserDetails();
+        userWindows = new HashMap<>();
 
         // Create some nodes
         UserTreeNode node1 = new UserTreeNode("Gabe", true);
@@ -231,9 +234,6 @@ public class MainPanel {
         // Add the totalsButtonPanel to the bottomButtonPanel
         bottomButtonPanel.add(totalsButtonPanel);
 
-        // Add the vertical buttonBoxLayout to the right side of the split pane
-        splitPane.setRightComponent(buttonBoxLayout);
-
         // Create the button panel and add the "User Details" button
         JPanel userDetailsPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(300, 20));
@@ -248,7 +248,9 @@ public class MainPanel {
 
                 if (selectedNode != null && selectedNode.getUserObject() instanceof String) {
                     String userName = (String) selectedNode.getUserObject();
-                    userDetails.showUserDetails(userName);
+
+                    UserDetails userWindow = getUserWindow(userName);
+                    userWindow.showUserDetails(); // Pass the selected user name
                 }
             }
         });
@@ -280,6 +282,16 @@ public class MainPanel {
 
         // Add the treeModelListener to the tree model
         treeModel.addTreeModelListener(treeModelListener);
+    }
+
+    private static UserDetails getUserWindow(String userName) {
+        if (userWindows.containsKey(userName)) {
+            return userWindows.get(userName);
+        } else {
+            UserDetails userWindow = new UserDetails();
+            userWindows.put(userName, userWindow);
+            return userWindow;
+        }
     }
 
     // Update the user and group counts
@@ -315,5 +327,4 @@ public class MainPanel {
         }
         return groupCount;
     }
-
 }

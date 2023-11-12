@@ -8,7 +8,7 @@ public class UserTreeNode extends DefaultMutableTreeNode {
     private int groupID;
     private boolean isUser;
 
-    public UserTreeNode(Object userObject, boolean isUser) {
+    public UserTreeNode(String userObject, boolean isUser) {
         super(userObject);
 
         if (isUser) {
