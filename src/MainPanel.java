@@ -250,7 +250,7 @@ public class MainPanel {
                     String userName = (String) selectedNode.getUserObject();
 
                     UserDetails userWindow = getUserWindow(userName);
-                    userWindow.showUserDetails(); // Pass the selected user name
+                    userWindow.showUserDetails();
                 }
             }
         });
