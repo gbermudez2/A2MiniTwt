@@ -12,17 +12,16 @@ public class UserDetails {
     private UserTreeNode userNode;
     private String userName;
     private JTree userTree;
-    private List<String> messages = new ArrayList<>(); // List to store messages
+    private List<String> messages = new ArrayList<>();
 
     public UserDetails(UserTreeNode userNode) {
         this.userNode = userNode;
         if (userNode != null) {
-            this.userName = userNode.toString(); // Initialize userName from userNode
+            this.userName = userNode.toString();
         }
     }
 
     public UserDetails() {
-        // No-parameter constructor
         this.userNode = null; // Initialize userNode to null
         this.userName = "";  // Initialize userName to an empty string
     }

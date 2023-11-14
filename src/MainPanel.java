@@ -74,33 +74,26 @@ public class MainPanel {
         root = new UserTreeNode("Root", false);
         userWindows = new HashMap<>();
 
-        // Create some nodes
         UserTreeNode node1 = new UserTreeNode("Gabe", true);
         UserTreeNode node2 = new UserTreeNode("John", true);
         UserTreeNode node3 = new UserTreeNode("Jack", true);
         UserTreeNode group1 = new UserTreeNode("CS Class", false);
 
-        // Add nodes to the tree
         root.add(group1);
         root.add(node2);
         root.add(node3);
-
         group1.add(node1);
 
-        // Create a tree model with the root node
         DefaultTreeModel treeModel = new DefaultTreeModel(root);
         JTree tree = new JTree(treeModel);
 
-        // Set tree selection mode to single selection
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        // Create a panel to hold the Tree
         JPanel treePanel = new JPanel(new BorderLayout());
         JScrollPane treeScrollPane = new JScrollPane(tree);
         treePanel.add(treeScrollPane, BorderLayout.CENTER);
         treePanel.setPreferredSize(new Dimension(300, 300));
 
-        // Create a panel for buttons. We pass important parameters to the Button Construct
         JPanel buttonPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(300,20));
         ButtonConstruct(buttonPanel, treePanel, frame, root, treeModel, tree);
@@ -115,13 +108,13 @@ public class MainPanel {
         JButton button1 = new JButton("User ID: " );
         JButton button2 = new JButton("Add User");
 
-        // Customize the buttons to have a flat appearance
+
         button1.setBorderPainted(false);
         button2.setBorderPainted(false);
         button1.setBackground(Color.LIGHT_GRAY);
         button2.setBackground(Color.LIGHT_GRAY);
-        button1.setForeground(Color.BLACK); // Text color
-        button2.setForeground(Color.BLACK); // Text color
+        button1.setForeground(Color.BLACK);
+        button2.setForeground(Color.BLACK);
 
         button1.setPreferredSize(new Dimension(300,30));
         button2.setPreferredSize(new Dimension(100,30));
@@ -142,11 +135,7 @@ public class MainPanel {
 
         buttonPanel.add(button1);
         buttonPanel.add(button2);
-
-        // Create a panel for the two buttons in the bottom row
         JPanel bottomButtonPanel = new JPanel();
-
-        // Create two more buttons for the bottom row
         JButton button3 = new JButton("Group ID: ");
         JButton button4 = new JButton("Add Group");
 
@@ -177,22 +166,14 @@ public class MainPanel {
         // Add the additional buttons to the bottomButtonPanel
         bottomButtonPanel.add(button3);
         bottomButtonPanel.add(button4);
-
-        // Create a split pane to separate the tree and button panels
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePanel, buttonPanel);
+        splitPane.setDividerLocation(300);
 
-        // Set the initial size of the split pane to ensure the tree panel has enough width
-        splitPane.setDividerLocation(300); // Adjust the size as needed
-
-        // Create a vertical box layout panel to hold the top and bottom button panels
         JPanel buttonBoxLayout = new JPanel();
         buttonBoxLayout.setLayout(new BoxLayout(buttonBoxLayout, BoxLayout.PAGE_AXIS));
-
-        // Add the top and bottom button panels to the vertical layout
         buttonBoxLayout.add(buttonPanel);
         buttonBoxLayout.add(bottomButtonPanel);
 
-        // Add the vertical buttonBoxLayout to the right side of the split pane
         splitPane.setRightComponent(buttonBoxLayout);
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override

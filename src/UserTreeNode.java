@@ -13,10 +13,10 @@ public class UserTreeNode extends DefaultMutableTreeNode {
 
         if (isUser) {
             this.userID = nextUserID++;
-            this.groupID = 0; // 0 indicates that it's a user, not a group
+            this.groupID = 0; // 0 indicates that it's a user
             this.isUser = true;
         } else {
-            this.userID = 0; // 0 indicates that it's a group, not a user
+            this.userID = 0; // 0 indicates that it's a group
             this.groupID = nextGroupID++;
             this.isUser = false;
         }
