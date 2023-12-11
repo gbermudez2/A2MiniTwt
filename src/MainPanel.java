@@ -13,6 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MainPanel {
 
@@ -24,6 +28,10 @@ public class MainPanel {
     private static JButton button6;
     private static UserDetails userDetails;
     private static Map<String, UserDetails> userWindows;
+    private static JTextField creationTimestampField; // Field to display creation timestamp
+    private static JTextField lastAddedUserField; // Field to display the last added user
+    private static String lastAddedUser; // Variable to track the last added user
+
 
     private static class CounterManager {
 
@@ -89,6 +97,14 @@ public class MainPanel {
 
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
+        // Create a panel to display creation timestamp
+        JPanel timestampPanel = new JPanel(new BorderLayout());
+        creationTimestampField = new JTextField();
+        creationTimestampField.setEditable(false);
+        timestampPanel.add(new JLabel("Creation Timestamp: "), BorderLayout.WEST);
+        timestampPanel.add(creationTimestampField, BorderLayout.CENTER);
+        frame.getContentPane().add(timestampPanel, BorderLayout.SOUTH);
+
         JPanel treePanel = new JPanel(new BorderLayout());
         JScrollPane treeScrollPane = new JScrollPane(tree);
         treePanel.add(treeScrollPane, BorderLayout.CENTER);
@@ -97,6 +113,34 @@ public class MainPanel {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(300,20));
         ButtonConstruct(buttonPanel, treePanel, frame, root, treeModel, tree);
+    }
+
+    private static boolean areAllUserIDsUnique(DefaultMutableTreeNode node) {
+        Set<Integer> userIDs = new HashSet<>();
+        return areUserIDsUnique(node, userIDs);
+    }
+
+    private static boolean areUserIDsUnique(DefaultMutableTreeNode node, Set<Integer> userIDs) {
+        if (node == null) {
+            return true;
+        }
+
+        if (node.getUserObject() instanceof UserTreeNode) {
+            UserTreeNode userNode = (UserTreeNode) node.getUserObject();
+            int userID = userNode.getUserID();
+
+            if (userIDs.contains(userID)) {
+                return false;
+            }
+            userIDs.add(userID);
+        }
+
+        for (int i = 0; i < node.getChildCount(); i++) {
+            if (!areUserIDsUnique((DefaultMutableTreeNode) node.getChildAt(i), userIDs)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static void ButtonConstruct(JPanel buttonPanel,
@@ -263,6 +307,44 @@ public class MainPanel {
 
         // Add the treeModelListener to the tree model
         treeModel.addTreeModelListener(treeModelListener);
+
+        JButton verifyUniqueIDsButton = new JButton("Verify Unique IDs");
+        verifyUniqueIDsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean uniqueIDs = areAllUserIDsUnique(root);
+                if (uniqueIDs) {
+                    JOptionPane.showMessageDialog(frame, "Every ID is unique");
+                } else {
+                    JOptionPane.showMessageDialog(frame, "IDs are not unique");
+                }
+            }
+        });
+
+        buttonPanel.add(verifyUniqueIDsButton);
+
+        JButton addUserButton = new JButton("Add User");
+        addUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Add logic to add a user
+                // For example:
+                UserTreeNode newNode = new UserTreeNode("New User", true);
+                root.add(newNode);
+                treeModel.reload(root);
+
+                lastAddedUser = "New User"; // Update the last added user
+                lastAddedUserField.setText(lastAddedUser);
+            }
+        });
+        buttonPanel.add(addUserButton);
+
+        // Create a text field for the last added user
+        lastAddedUserField = new JTextField(15); // Adjust the size as needed
+        lastAddedUserField.setEditable(false);
+        lastAddedUserField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        buttonPanel.add(new JLabel("Last Added User: "));
+        buttonPanel.add(lastAddedUserField);
     }
 
     private static UserDetails getUserWindow(String userName) {
